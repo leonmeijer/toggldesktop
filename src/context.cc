@@ -3785,6 +3785,10 @@ void Context::displayPomodoro() {
             return;
         }
 
+        if (last_pomodoro_reminder_time_ == 0 || last_pomodoro_reminder_time_ > time(0)) {
+            last_pomodoro_reminder_time_ = user_->RunningTimeEntry()->Start();
+        }
+
         if (time(0) - last_pomodoro_reminder_time_
                 < settings_.pomodoro_minutes * 60) {
             return;
@@ -4601,6 +4605,8 @@ error Context::signup(
         Json::Value user;
         user["email"] = email;
         user["password"] = password;
+        user["created_with"] = Formatter::EscapeJSONString(HTTPSClient::Config.UserAgent());
+
 
         Json::Value root;
         root["user"] = user;
